@@ -3,13 +3,15 @@ body, html {
     padding: 0;
     overflow: hidden;
     font-family: Arial, sans-serif;
+    font-family: "Lemon", serif;
+    background-color: #bc730c;
+    color: white;
 }
 h1 {
     text-align: center;
     margin: 0;
-    padding: 50px;
+    padding-top: 50px;
     color: white;
-    font-family: "Lemon", serif;
     font-weight: 700;
     font-size: 40px;
 }
@@ -17,7 +19,6 @@ h3 {
     text-align: center;
     margin: 0;
     padding: 10px;
-    color: white;
     font-family: "Lemon", serif;
     font-weight: 200;
 }
@@ -25,28 +26,55 @@ h3 {
     position: relative;
     width: 100vw;
     height: 100vh;
-    background-color: deeppink;
 }
+
 #player {
     position: absolute;
     bottom: 10px;
     left: 50%;
-    width: 10%; /* Default size for larger screens */
     transform: translateX(-50%);
     cursor: pointer;
+    width: 10vw;
 }
+
+#player-face, #player-jaw {
+    position: relative;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#player-face {
+    width: 100%;
+}
+
+#player-jaw {
+    width: 39%;
+    bottom: 39px; /* Aligns the jaw with the bottom of the face */
+    z-index: 3;
+}
+
+.jaw-closed {
+    bottom: 0; /* Align this with the initial top value of player-jaw */
+}
+
+.jaw-open {
+    bottom: -10%;
+    transition: top 0.3s ease;
+}
+
 .sausage {
     position: absolute;
     top: 0;
     width: 150px;
     transform: rotate(90deg);
+    z-index: 1;
 }
 #score {
     position: absolute;
     top: 10px;
     right: 10px;
     font-size: 24px;
-    color: #333;
 }
 #game-over {
     position: absolute;
@@ -66,6 +94,6 @@ h3 {
 /* Media query for mobile devices */
 @media screen and (max-width: 900px) {
     #player {
-        width: 40%; /* Size for mobile screens */
+        width: 30vw; /* Size for mobile screens */
     }
 }

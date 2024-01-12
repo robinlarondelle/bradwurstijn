@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,19 +10,24 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lemon&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div id="game-container">
-        <h1>Wilkommen bei BratwürsTijn</h1>
+        <h1>Wilkommen bei Tijns Bratwürst festein</h1>
         <h3>Ich bin Tijn. Ich mag große Bratwürste. Füll mich mit Bratwurst</h3>
-        <img id="player" src="tijn.png" width="100">
+        <div id="player">
+            <img id="player-face" src="tijn-gezicht.png">
+            <img id="player-jaw" src="tijn-mond.png" class="jaw-closed">
+        </div>
         <div id="score">Score: 0</div>
         <div id="game-over" style="display: none;">
             <div>Game Over!</div>
             <div>Your Score: <span id="final-score"></span></div>
             <button id="restart-button">Restart Game</button>
         </div>
-        
+
     </div>
     <script src="script.js"></script>
 </body>
+
 </html>
