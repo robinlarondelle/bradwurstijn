@@ -21,9 +21,29 @@
         </div>
         <div id="score">Score: 0</div>
         <div id="game-over" style="display: none;">
-            <div>Game Over!</div>
-            <div>Your Score: <span id="final-score"></span></div>
-            <button id="restart-button">Restart Game</button>
+            <h3><b>Game Over!</b></h3>
+            <h3>Your Score: <span id="final-score"></span></h3>
+
+            <h1 class="margin-top">Buy Tijn a beer!</h1>
+            <div class="flex margin-top">
+                <a href="https://paypal.me/bratwurstijn?country.x=NL&locale.x=nl_NL">
+                    <img src="paypal.png" alt=""></a>
+                <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+                    data-name="bmc-button" data-slug="bratwurstijn" data-color="#FFDD00" data-emoji=""
+                    data-font="Cookie" data-text="Buy me a coffee" data-outline-color="#000000"
+                    data-font-color="#000000" data-coffee-color="#ffffff"></script>
+            </div>
+
+            <div>Or transfer directly to:</div>
+            <div class="flex" onclick="copy()">
+                <div id="iban">NL11 INGB 0758 4983 06</div>
+                <img src="copy.png" alt="" width="100px" id="copy-image">
+            </div>
+
+            <p id="copied-iban">copied iban!</p>
+
+            <button id="restart-button" class="margin-top">Restart Game</button>
+
         </div>
 
     </div>

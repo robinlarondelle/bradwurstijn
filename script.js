@@ -19,12 +19,10 @@ let initialPlayerX;
 
 function startDrag(e) {
     dragEnabled = true;
+
     const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
 
-    // Record the initial position of the mouse or touch
     initialX = clientX;
-
-    // Record the initial left position of the player
     initialPlayerX = player.getBoundingClientRect().left - gameContainer.getBoundingClientRect().left;
 }
 
@@ -32,17 +30,13 @@ function drag(e) {
     if (!dragEnabled) return;
     e.preventDefault();
 
-    // Get the current mouse or touch position
     const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
 
-    // Calculate the new position of the player
     let newLeft = initialPlayerX + (clientX - initialX) + player.offsetWidth / 2;
 
-    // Adjusting newLeft to ensure player stays within 20 pixels of the borders
-    newLeft = Math.max(newLeft, (player.offsetWidth / 2) + 20); // Ensures not going too left
-    newLeft = Math.min(newLeft, gameContainer.offsetWidth - (player.offsetWidth / 2) - 20); // Ensures not going too right
+    newLeft = Math.max(newLeft, (player.offsetWidth / 2)); // Ensures not going too left
+    newLeft = Math.min(newLeft, gameContainer.offsetWidth - (player.offsetWidth / 2)); // Ensures not going too right
 
-    // Update the player's position
     player.style.left = newLeft + 'px';
 }
 
@@ -50,32 +44,8 @@ function endDrag() {
     dragEnabled = false;
 }
 
-// Refined Collision Detection
-function isCaught(sausage) {
-    const sausageRect = sausage.getBoundingClientRect();
-    const jawRect = document.getElementById('player-jaw').getBoundingClientRect();
-    const isNear = sausageRect.bottom > jawRect.top - 50; // 50 pixels threshold for jaw opening
-    if (isNear) {
-        document.getElementById('player-jaw').classList.add('jaw-open');
-    }
-    return sausageRect.bottom > jawRect.top &&
-           sausageRect.right > jawRect.left &&
-           sausageRect.left < jawRect.right;
-}
-
-// Balanced Difficulty Scaling
 function difficultyScaling() {
-    // spawn rate should be random between 500 and 2000, but should be faster as the score increases
     let spawnRate = 2000 - Math.min(Math.floor(score / 2) * 400, 1500);
-
-    
-    
-    // fall speed should be random between 5 and 10, but should be faster as the score increases
-
-
-
-    // let spawnRate = 2000 - Math.min(Math.floor(score / 2) * 400, 1500);
-    // let spawnRate = 1;
     let fallSpeed = 5 + Math.min(Math.floor(score / 5), 5);
     return { spawnRate, fallSpeed };
 }
@@ -83,17 +53,25 @@ function difficultyScaling() {
 function spawnSausage(fallSpeed) {
     if (isGameOver) return;
     const sausage = document.createElement('img');
-    sausage.src = 'worst-1.png';
+    let randomSausage = Math.floor(Math.random() * 3) + 1;
+    sausage.src = 'worst-' + randomSausage + '.png';
     sausage.classList.add('sausage');
-    // Ensure sausages spawn within the bounds of the game container
-    sausage.style.left = Math.random() * (gameContainer.offsetWidth - sausage.offsetWidth) + 'px';
+
+    const sausageWidth = sausage.width * 0.15; // 10%
+    const gameContainerWidth = gameContainer.offsetWidth;
+
+    const leftbound = 20;
+    const rightbound = Math.round(gameContainerWidth - (sausageWidth * 2) - 20);
+
+    const calculatedSpawnPostition = Math.round(Math.random() * (rightbound - leftbound) + leftbound);
+
+    sausage.style.left = calculatedSpawnPostition + "px";
 
     if (sausage.style.left < 20) {
         console.log(sausage.style.left)
         sausage.style.left = 20;
     }
 
-    // if sausage spawns too far to the right of the current width, adjust it to 20ox from the right border
     if (sausage.style.left > gameContainer.offsetWidth - 20) {
         console.log(sausage.style.left)
         sausage.style.left = gameContainer.offsetWidth - 20;
@@ -103,33 +81,57 @@ function spawnSausage(fallSpeed) {
     fall(sausage, fallSpeed);
 }
 
-
 function fall(sausage, fallSpeed) {
     let sausageTop = 0;
     const fallInterval = setInterval(() => {
         if (sausageTop >= gameContainer.offsetHeight - 70) {
             clearInterval(fallInterval);
-            document.getElementById('player-jaw').classList.remove('jaw-open'); // Close the jaw
-            if (isCaught(sausage)) {
+            if (isNearMouth(sausage)) {
                 score++;
                 scoreDisplay.textContent = 'Score: ' + score;
-
-                // remove the sausage from the DOM
                 sausage.remove();
             } else {
                 gameOver();
             }
+            sausage.remove();
         } else {
             sausageTop += fallSpeed; // Falling speed
             sausage.style.top = sausageTop + 'px';
         }
-    }, 20); // Falling rate
+    }, 18); // Falling rate
+}
+
+function isNearMouth(sausage, margin = 0) {
+    const sausageRect = sausage.getBoundingClientRect();
+    const jawRect = document.getElementById('player-jaw').getBoundingClientRect();
+
+    const sausageLeftBound = sausageRect.left;
+    const sausageRightBound = sausageRect.right;
+
+    const jawLeftBound = jawRect.left;
+    const jawRightBound = jawRect.right;
+
+    const isNear = sausageRect.bottom > jawRect.top - margin &&
+        sausageLeftBound < jawRightBound && sausageRightBound > jawLeftBound;
+    return isNear;
+}
+
+function openMouth() {
+    document.getElementById('player-jaw').classList.add('jaw-open');
+    document.getElementById('player-jaw').classList.remove('jaw-closed');
+}
+
+function closeMouth() {
+    document.getElementById('player-jaw').classList.add('jaw-closed');
+    document.getElementById('player-jaw').classList.remove('jaw-open');
 }
 
 function gameOver() {
     isGameOver = true;
     document.getElementById('final-score').textContent = score;
     document.getElementById('game-over').style.display = 'flex';
+    player.classList.add('spin');
+    document.getElementById('player-jaw').classList.add('jaw-open');
 }
 
 document.getElementById('restart-button').addEventListener('click', function () {
@@ -144,4 +146,26 @@ function gameLoop() {
     setTimeout(gameLoop, spawnRate);
 }
 
+function checkCollision() {
+    if (!isGameOver) {
+        const sausages = document.querySelectorAll('.sausage');
+        const nearCollision = Array.from(sausages).some(sausage => isNearMouth(sausage, 50));
+
+        if (nearCollision) {
+            openMouth();
+        } else {
+            closeMouth();
+        }
+    }
+
+}
+
+function copy() {
+    var copyText = document.getElementById("iban");
+    navigator.clipboard.writeText(copyText.innerHTML);
+    document.getElementById("copied-iban").style.display = "block";
+}
+
 gameLoop();
+setInterval(checkCollision, 50);
+

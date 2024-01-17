@@ -1,31 +1,27 @@
-body, html {
+body,
+html {
     margin: 0;
     padding: 0;
     overflow: hidden;
     font-family: Arial, sans-serif;
     font-family: "Lemon", serif;
-    background-color: #bc730c;
+    background-color: #ef78d7;
     color: white;
 }
-h1 {
-    text-align: center;
-    margin: 0;
-    padding-top: 50px;
-    color: white;
-    font-weight: 700;
-    font-size: 40px;
-}
-h3 {
-    text-align: center;
-    margin: 0;
-    padding: 10px;
-    font-family: "Lemon", serif;
-    font-weight: 200;
-}
+
 #game-container {
     position: relative;
     width: 100vw;
     height: 100vh;
+    z-index: 0;
+}
+
+.sausage {
+    position: absolute;
+    top: 0;
+    height: 15%;
+    width: auto;
+    z-index: 4;
 }
 
 #player {
@@ -35,9 +31,11 @@ h3 {
     transform: translateX(-50%);
     cursor: pointer;
     width: 10vw;
+    z-index: 2;
 }
 
-#player-face, #player-jaw {
+#player-face,
+#player-jaw {
     position: relative;
     bottom: 0;
     left: 50%;
@@ -46,43 +44,96 @@ h3 {
 
 #player-face {
     width: 100%;
+    z-index: 1;
 }
 
 #player-jaw {
+    position: absolute;
+    bottom: 3%;
+    left: 50%;
+    transform: translateX(-50%);
     width: 39%;
-    bottom: 39px; /* Aligns the jaw with the bottom of the face */
-    z-index: 3;
+    transition: bottom 0.1s ease;
+    z-index: 2;
 }
 
 .jaw-closed {
-    bottom: 0; /* Align this with the initial top value of player-jaw */
+    bottom: 3% !important;
 }
 
 .jaw-open {
-    bottom: -10%;
-    transition: top 0.3s ease;
+    bottom: -5% !important;
 }
 
-.sausage {
-    position: absolute;
-    top: 0;
-    width: 150px;
-    transform: rotate(90deg);
-    z-index: 1;
+h1 {
+    text-align: center;
+    margin: 0;
+    padding-top: 50px;
+    color: white;
+    font-weight: 700;
+    font-size: 40px;
 }
+
+h3 {
+    text-align: center;
+    margin: 0;
+    padding: 10px;
+    font-family: "Lemon", serif;
+    font-weight: 200;
+}
+
+.margin-top {
+    margin-top: 30px;
+}
+
+.flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 10px;
+}
+
+a {
+    color: white;
+}
+
+a img {
+    width: 150px;
+    height: 150px;
+
+}
+
+.iban-copy {
+    background-color: transparent;
+    border: none;
+    color: white;
+    font: inherit;
+}
+
+#copy-image {
+    width: 30px;
+    height: 30px;
+    fill: white;
+}
+
+#copied-iban {
+    display: none;
+}
+
 #score {
     position: absolute;
     top: 10px;
     right: 10px;
     font-size: 24px;
 }
+
 #game-over {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.9);
     color: white;
     display: flex;
     flex-direction: column;
@@ -91,9 +142,65 @@ h3 {
     font-size: 24px;
 }
 
-/* Media query for mobile devices */
+#restart-button {
+    background-color: transparent;
+    border: 2px solid white;
+    color: white;
+    font: inherit;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 100px;
+
+}
+
+.spin {
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.bouncing-element {
+    width: 50px;
+    height: 30px;
+    background-color: red;
+    position: absolute;
+    animation: cornerBounce 5s linear infinite;
+}
+
+@keyframes cornerBounce {
+
+    0%,
+    100% {
+        top: 0;
+        left: 0;
+    }
+
+    25% {
+        top: 0;
+        left: calc(100% - 50px);
+    }
+
+    50% {
+        top: calc(100% - 30px);
+        left: calc(100% - 50px);
+    }
+
+    75% {
+        top: calc(100% - 30px);
+        left: 0;
+    }
+}
+
 @media screen and (max-width: 900px) {
     #player {
-        width: 30vw; /* Size for mobile screens */
+        width: 30vw;
     }
 }
